@@ -1,6 +1,8 @@
 import React, { useState,useEffect } from 'react'
 import axios from '../axios';
-import {useNavigate} from 'react-router-dom';
+import editUser from './Edit';
+import {useNavigate,Link} from 'react-router-dom';
+import Edit from './Edit';
 
 
 const View = () => {
@@ -14,6 +16,7 @@ const View = () => {
             const result=await axios.get('/api/users');
             const data=result.data.data;
             setUsers(data);
+
         
             // console.log(users);
             }
@@ -26,9 +29,14 @@ const View = () => {
 
     const deleteUser =async (user)=>{
         try{
-       await axios.delete('/api/users',user);    
+       await axios.delete('/api/users',{data:user});
+       window.location.reload();    
         }
         catch(err){console.log(err);}
+    }
+    const edit=(user)=>{
+        console.log(user);
+            localStorage.setItem("user",JSON.stringify(user));
     }
     
   return (
@@ -58,7 +66,7 @@ const View = () => {
                         <td>{user.phone}</td>
                         <td>{user.gender}</td>
                         <td>
-                            <button className='btn btn-warning mx-3' onClick={()=>{}}>Edit</button>
+                            <Link to='/edit'><button className='btn btn-warning mx-3' onClick={()=>{edit(user)}}>Edit</button></Link>
                             <button className='btn btn-danger mx-3' onClick={()=>{deleteUser(user)}}>Delete</button>
 
                         </td>
