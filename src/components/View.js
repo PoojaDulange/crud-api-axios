@@ -6,6 +6,7 @@ import Edit from './Edit';
 
 
 const View = () => {
+    const token=localStorage.getItem("token");
     const[users,setUsers]=useState([{}]);
     
     const navigate=useNavigate();
@@ -13,12 +14,10 @@ const View = () => {
     useEffect(()=>{
       const  view =async()=>{
         try{
-            const result=await axios.get('/api/users');
+
+            const result=await axios.get('/api/users',{headers: {"Authorization" : `Bearer ${token}`}});
             const data=result.data.data;
             setUsers(data);
-
-        
-            // console.log(users);
             }
             catch(err){
                 console.log(err);
@@ -29,7 +28,7 @@ const View = () => {
 
     const deleteUser =async (user)=>{
         try{
-       await axios.delete('/api/users',{data:user});
+       await axios.delete('/api/users',{data:user,headers: {"Authorization" : `Bearer ${token}`}});
        window.location.reload();    
         }
         catch(err){console.log(err);}
@@ -38,10 +37,16 @@ const View = () => {
         console.log(user);
             localStorage.setItem("user",JSON.stringify(user));
     }
+
+    const logOut=()=>{
+        localStorage.setItem("token",null);
+        navigate('/');
+    }
     
   return (
     <div>
-        <button onClick={()=>{navigate('/add')}}>AddUser</button>
+        <button className='btn btn-primary m-3' onClick={()=>{navigate('/add')}}>AddUser</button>
+        <button className='btn btn-primary m-3' onClick={logOut}>LogOut</button>
 
         <table className='table bordered'>
             <thead>

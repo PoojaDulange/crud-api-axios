@@ -3,8 +3,9 @@ import React,{useState} from 'react'
 import { ToastContainer,toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './AddUser.css';
+import { useNavigate } from 'react-router-dom';
 const AddUser = () => {
-
+    const navigate=useNavigate();
     const[user,setUser]=useState({
         firstName:"",
         lastName:"",
@@ -23,10 +24,13 @@ const AddUser = () => {
         });
     }
 
-    const addUser= async ()=>{
+    const addUser= async (e)=>{
+        e.preventDefault();
         try{
-            await axios.post('/api/users',user);
+            const token=localStorage.getItem("token");
+            await axios.post('/api/users/',user,{headers:{"Authorization":`Bearer ${token}`}});
             toast("User added successfully");
+            navigate("/view");
         }
         catch(err){console.log(err);}
     }

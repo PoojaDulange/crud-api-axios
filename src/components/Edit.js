@@ -1,13 +1,25 @@
 import axios from '../axios';
 import React, { useEffect, useState } from 'react'
 import { ToastContainer,toast } from 'react-toastify'
+import { useNavigate } from 'react-router-dom';
 
 const Edit = () => {
+    const navigate=useNavigate();
     const [user,setUser]=useState({});
-    const[newUser,setNewUser]=useState({});
+    const[newUser,setNewUser]=useState({
+        id:"",
+        firstName:"",
+        lastName:"",
+        email:"",
+        password:"",
+        phone:"",
+        gender:""
+    });
     useEffect(()=>{
+
         const data=JSON.parse(localStorage.getItem("user"));
         setUser(data);
+        newUser.id=data.id;
     },[])
     const handleChange=(e)=>{
         const{value,name}=e.target;
@@ -16,10 +28,14 @@ const Edit = () => {
             ...newUser,[name]:value
     }});
     }
-    const editUser=async()=>{
+    const editUser=async(e)=>{
+        e.preventDefault();
         try{
-        await axios.patch('/api/users',newUser);
+        console.log(newUser);
+        const token=localStorage.getItem("token");
+        await axios.patch('/api/users',newUser,{headers:{"Authorization":`bearer ${token}`}});
         toast("Edited successfully");
+        navigate('/view')
         }
         catch(err){
             console.log(err);
@@ -28,8 +44,6 @@ const Edit = () => {
   return (
     <div className='container'>
         <form>
-        <label htmlFor='id'>Id:</label>
-        <input id='id'  type='text' onChange={handleChange}  placeholder={user.id} name='id' required/>
         <label htmlFor='fname'>FirstName:</label>
         <input id='fname'  type='text' onChange={handleChange}  placeholder={user.firstName} name='firstName' required/>
         <label htmlFor='lname'>LastName:</label>
