@@ -29,7 +29,7 @@ const AddUser = () => {
         try{
             const token=localStorage.getItem("token");
             await axios.post('/api/users/',user,{headers:{"Authorization":`Bearer ${token}`}});
-            toast("User added successfully");
+            toast("You have added user successfully");
             navigate("/view");
         }
         catch(err){console.log(err);}
