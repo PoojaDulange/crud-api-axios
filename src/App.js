@@ -7,6 +7,7 @@ import View from './components/View';
 import Login from './components/Login';
 
 import { render } from '@testing-library/react';
+
 function App() {
   const token=localStorage.getItem("token");
   
